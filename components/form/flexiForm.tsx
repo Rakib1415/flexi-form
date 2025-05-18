@@ -14,6 +14,19 @@ import {
 } from 'react-hook-form';
 import { z, ZodType } from 'zod';
 import { Form } from '../ui/form';
+import { FieldArray } from './FieldArray';
+import { TextField } from './fields/TextField';
+import { TextAreaField } from './fields/TextAreaField';
+import { UniqueTextField } from './fields/UniqueTextField';
+import { SwitchField } from './fields/SwitchField';
+import { SelectField } from './fields/SelectField';
+import { RadioGroupField } from './fields/RadioGroupField';
+import { PasswordField } from './fields/PasswordField';
+import { ImageUploadField } from './fields/ImageUploadField';
+import { DateField } from './fields/DateField';
+import { DateTimeField } from './fields/DateTimeField';
+import { CheckboxField } from './fields/CheckboxField';
+import { CheckboxGroupField } from './fields/CheckboxGroupField';
 
 export type FlexiFormRef<T extends FieldValues> = {
 	getValues: () => T;
@@ -26,7 +39,7 @@ export type FlexiFormRef<T extends FieldValues> = {
 
 export type FlexiFormProps<TSchema extends ZodType> = {
 	schema: TSchema;
-	initialValues: Partial<z.infer<TSchema>>;
+	defaultValues: Partial<z.infer<TSchema>>;
 	onSubmit: SubmitHandler<z.infer<TSchema>>;
 	children: ReactNode;
 	ref: Ref<FlexiFormRef<z.infer<TSchema>>>;
@@ -36,7 +49,7 @@ export type FlexiFormProps<TSchema extends ZodType> = {
 /**
  * A Flexi form component.
  * @param schema The schema of the form.
- * @param initialValues The initial values of the form.
+ * @param defaultValues The initial values of the form.
  * @param onSubmit The submit handler of the form.
  * @param children The children of the form.
  * @param ref The reference of the form.
@@ -46,14 +59,14 @@ export type FlexiFormProps<TSchema extends ZodType> = {
 
 export const FlexiForm = <TSchema extends ZodType>({
 	ref,
-	initialValues,
+	defaultValues,
 	schema,
 	onSubmit,
 	children,
 	mode = 'onChange',
 }: FlexiFormProps<TSchema>) => {
 	const form = useForm<z.infer<TSchema>>({
-		defaultValues: initialValues as DefaultValues<z.infer<TSchema>>,
+		defaultValues : defaultValues as DefaultValues<z.infer<TSchema>>,
 		resolver: zodResolver(schema),
 		mode,
 	});
@@ -83,3 +96,17 @@ export const FlexiForm = <TSchema extends ZodType>({
 };
 
 FlexiForm.displayName = 'FlexiForm';
+
+FlexiForm.ArrayField = FieldArray;
+FlexiForm.TextField = TextField;
+FlexiForm.TextAreaField = TextAreaField;
+FlexiForm.UniqueTextField = UniqueTextField;
+FlexiForm.SwitchField = SwitchField;
+FlexiForm.SelectField = SelectField;
+FlexiForm.RadioGroupField = RadioGroupField;
+FlexiForm.PasswordField = PasswordField;
+FlexiForm.ImageUploadField = ImageUploadField;
+FlexiForm.DateField = DateField;
+FlexiForm.DateTimeField = DateTimeField;
+FlexiForm.CheckboxField = CheckboxField;
+FlexiForm.CheckboxGroupField = CheckboxGroupField;

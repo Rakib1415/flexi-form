@@ -1,17 +1,13 @@
 'use client';
 
-import { CheckboxField } from '@/components/form/fields/CheckboxField';
-import { CheckboxGroupField } from '@/components/form/fields/CheckboxGroupField';
-import { DateField } from '@/components/form/fields/DateField';
-import { RadioGroupField } from '@/components/form/fields/RadioGroupField';
-import { TextAreaField } from '@/components/form/fields/TextAreaField';
-import { TextField } from '@/components/form/fields/TextField';
+
 import { FlexiForm, FlexiFormRef } from '@/components/form/flexiForm';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useRef } from 'react';
 import { z } from 'zod';
+import { ExperiencesFields } from './ExperiencesFields';
 
 const FormSchema = z.object({
 	name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -26,15 +22,31 @@ const FormSchema = z.object({
 		.boolean()
 		.refine((value) => value, { message: 'You must agree to the terms' }),
 	interests: z.array(z.string()).optional(),
+	professionalExperiences: z
+		.array(
+			z.object({
+				companyName: z.string().min(1, 'Company name is required'),
+				jobTitle: z.string().min(1, 'Job title is required'),
+				startDate: z.date({
+					message: 'Please enter a valid date',
+				}),
+				endDate: z.date({
+					message: 'Please enter a valid date',
+				}),
+				jobSummary: z.string().optional(),
+			})
+		)
+		.optional(),
 });
 
-type FormValues = z.infer<typeof FormSchema>;
+export type FormValues = z.infer<typeof FormSchema>;
 
-const initialValues: FormValues = {
+const defaultValues: FormValues = {
 	name: '',
 	gender: 'Male',
 	terms: false,
 	dob: new Date(),
+	professionalExperiences: [],
 };
 
 const genderOptions = [
@@ -57,7 +69,7 @@ export const Example2 = () => {
 		<Card className="p-8 my-4 max-w-xl mx-auto">
 			<FlexiForm
 				schema={FormSchema}
-				initialValues={initialValues}
+				defaultValues={defaultValues}
 				onSubmit={(values) => {
 					console.log(values);
 					alert(JSON.stringify(values));
@@ -65,7 +77,7 @@ export const Example2 = () => {
 				ref={formRef}
 			>
 				<div className="space-y-4">
-					<TextField<FormValues>
+					<FlexiForm.TextField<FormValues>
 						name="name"
 						label="Name"
 						placeholder="Enter your name"
@@ -73,28 +85,30 @@ export const Example2 = () => {
 						action={() => formRef.current?.setValue('name', '')}
 					/>
 
-					<RadioGroupField<FormValues>
+					<FlexiForm.RadioGroupField<FormValues>
 						name="gender"
 						options={genderOptions}
 						required
 					/>
 
-					<DateField<FormValues> name="dob" label="Date of Birth" required />
+					<FlexiForm.DateField<FormValues> name="dob" label="Date of Birth" required />
 
-					<TextAreaField<FormValues>
+					<FlexiForm.TextAreaField<FormValues>
 						name="bio"
 						label="Bio"
 						placeholder="Enter your bio"
 						autoResize
 					/>
 
-					<CheckboxGroupField<FormValues>
+					<FlexiForm.CheckboxGroupField<FormValues>
 						name="interests"
 						options={interestsOptions}
 						label="Interests"
 					/>
 
-					<CheckboxField<FormValues>
+					<ExperiencesFields/>
+
+					<FlexiForm.CheckboxField<FormValues>
 						name="terms"
 						label="I agree to the terms"
 						required
