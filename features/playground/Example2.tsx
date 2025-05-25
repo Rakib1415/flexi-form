@@ -8,6 +8,8 @@ import { Card } from '@/components/ui/card';
 import { useRef } from 'react';
 import { z } from 'zod';
 import { ExperiencesFields } from './ExperiencesFields';
+import { BookingCalendarView } from '@/components/calendar';
+import SmoothToggle from './SmoothToggle';
 
 const FormSchema = z.object({
 	name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -66,7 +68,8 @@ export const Example2 = () => {
 	const formRef = useRef<FlexiFormRef<FormValues>>(null);
 
 	return (
-		<Card className="p-8 my-4 max-w-xl mx-auto">
+		<>
+		{/* <Card className="p-8 my-4 max-w-xl mx-auto">
 			<FlexiForm
 				schema={FormSchema}
 				defaultValues={defaultValues}
@@ -117,6 +120,15 @@ export const Example2 = () => {
 					<Button type="submit">Submit</Button>
 				</div>
 			</FlexiForm>
-		</Card>
+		</Card> */}
+
+		<div className='mt-12 h-[750px] w-full overflow-y-auto bg-[#F2F2F2] mb-24'>
+
+			<BookingCalendarView/>
+
+			<SmoothToggle/>
+
+		</div>
+		</>
 	);
 };
